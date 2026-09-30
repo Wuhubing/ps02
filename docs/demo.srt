@@ -1,0 +1,103 @@
+1
+00:00:02,737 --> 00:00:08,440
+This is Tech and Sci-Fi Books, a personal book manager built from small Bash programs.
+
+2
+00:00:08,440 --> 00:00:12,242
+The Gum interface makes it easy to organize a reading
+
+3
+00:00:12,242 --> 00:00:16,424
+list and explore recommendations for programming, artificial intelligence, and science fiction.
+
+4
+00:00:17,127 --> 00:00:19,893
+First, I will add Dune by Frank Herbert.
+
+5
+00:00:19,893 --> 00:00:23,005
+The app searches Open Library and returns matching books.
+
+6
+00:00:23,005 --> 00:00:28,193
+Instead of typing every detail, I can choose the correct result and review its metadata.
+
+7
+00:00:28,898 --> 00:00:34,567
+I confirm the title, author, genre, and link, then keep the status as want to read.
+
+8
+00:00:34,567 --> 00:00:39,527
+After I approve the entry, the database component saves it to a CSV file.
+
+9
+00:00:39,527 --> 00:00:41,653
+Each layer has a separate responsibility.
+
+10
+00:00:42,356 --> 00:00:44,772
+Next, I search for Frank Herbert.
+
+11
+00:00:44,772 --> 00:00:48,798
+The saved book appears immediately, along with its reading status.
+
+12
+00:00:48,798 --> 00:00:55,239
+Search works across titles, authors, and genres, and the library stays available after the app closes.
+
+13
+00:00:55,943 --> 00:00:57,577
+Finally, I request recommendations.
+
+14
+00:00:57,577 --> 00:01:04,520
+The starting interests are programming, AI, and science fiction, and I can change them for this run.
+
+15
+00:01:04,520 --> 00:01:09,830
+The app will send the same library snapshot to three independent recommendation strategies.
+
+16
+00:01:10,534 --> 00:01:14,174
+All three strategies are now running at the same time.
+
+17
+00:01:14,174 --> 00:01:16,358
+History uses saved books and ratings.
+
+18
+00:01:16,358 --> 00:01:18,543
+Interests follows the topics I entered.
+
+19
+00:01:18,543 --> 00:01:20,727
+Discovery explores outside the usual pattern.
+
+20
+00:01:20,727 --> 00:01:26,187
+The status messages show each task finishing, while the Bash workflow waits for every process.
+
+21
+00:01:26,888 --> 00:01:30,127
+The workflow combines the results and pipes them into refinement.
+
+22
+00:01:30,127 --> 00:01:36,607
+That step removes duplicates and books already in the library, then rotates among the strategies to produce a short list.
+
+23
+00:01:36,607 --> 00:01:40,170
+Each suggestion shows its source and a reason for reading it.
+
+24
+00:01:40,873 --> 00:01:46,655
+That is the complete demo: adding a book, searching the library, and generating recommendations.
+
+25
+00:01:46,655 --> 00:01:50,784
+Small Bash files handle the layers, Gum handles interaction, and
+
+26
+00:01:50,784 --> 00:01:54,501
+parallel processes and a pipe connect the recommendation workflow.

@@ -2,6 +2,10 @@
 
 A small Bash reading desk for programming, AI, science fiction, and discoveries beyond them. Built for PS2 from [onexi/ps02](https://github.com/onexi/ps02).
 
+**[Watch the narrated demo — 1:59, MP4, about 3 MB](docs/demo.mp4)** · [Download video](https://raw.githubusercontent.com/Wuhubing/ps02/main/docs/demo.mp4)
+
+[![Watch the narrated terminal demo](docs/demo-poster.jpg)](docs/demo.mp4)
+
 ## Run
 
 On macOS, install the dependencies:
@@ -87,9 +91,11 @@ The automated suite uses an isolated database and local curl/Gum doubles. It nev
 
 For a separate real API check, run **Get Recommendations** in the application after configuring your key. Automated fixtures and real checks are reported separately in [VALIDATION.md](docs/VALIDATION.md).
 
-## Narrated demo — recording still required
+## Narrated demo
 
-The required narrated video has **not yet been recorded**. Use the [2–3 minute demo script](docs/DEMO.md) to record adding a book, searching/updating it, and generating/saving a recommendation. Then add the video to the repository or replace this paragraph with a clearly visible, accessible video link before submitting.
+The [demo video](docs/demo.mp4) shows three actual terminal operations: adding Dune through Open Library, searching by author, and generating a shortlist with three concurrent OpenAI strategies. It includes English synthetic narration (macOS Samantha), visible task progress, and English captions. The compressed 1080p MP4 is about 3 MB. The demo uses an isolated library, so the shipped library remains empty.
+
+See the [narration transcript and recording notes](docs/DEMO.md), or download the [subtitle file](docs/demo.srt).
 
 The final submission is this repository's URL in the class sheet's **Assignment No 2** column. The original assignment is preserved in [ASSIGNMENT.md](docs/ASSIGNMENT.md).
 
