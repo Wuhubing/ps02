@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""Scripted UI choices for cancellation and save flows; real Gum is tested separately."""
+import json
+import os
+from pathlib import Path
+import sys
+
+kind = sys.argv[1]
+if kind == "style":
+    sys.exit(0)
+script = Path(os.environ["MOCK_GUM_SCRIPT"])
+steps = json.loads(script.read_text())
+if not steps:
+    print("Unexpected Gum call: " + kind, file=sys.stderr)
+    sys.exit(3)
+step = steps.pop(0)
+script.write_text(json.dumps(steps))
+if step["kind"] != kind:
+    print("Expected " + step["kind"] + ", got " + kind, file=sys.stderr)
+    sys.exit(3)
+if step.get("exit", 0):
+    sys.exit(step["exit"])
+print(step.get("value", ""))

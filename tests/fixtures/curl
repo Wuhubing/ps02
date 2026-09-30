@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+"""Offline HTTP double. Reads requests but never reads/logs authorization headers."""
+import json
+import os
+from pathlib import Path
+import sys
+import time
+
+args = sys.argv[1:]
+output = Path(args[args.index("--output") + 1])
+mode = os.environ.get("MOCK_HTTP", "success")
+if "https://openlibrary.org/search.json" in args:
+    if mode == "metadata_failure":
+        sys.exit(28)
+    output.write_text(json.dumps({"docs": [{"title": "Dune", "author_name": ["Frank Herbert"],
+        "subject": ["Science Fiction"], "key": "/works/OL893415W"}]}))
+    sys.exit(0)
+
+request = json.loads(Path(args[args.index("--data-binary") + 1][1:]).read_text())
+assert request["text"]["format"]["strict"] is True
+assert request["text"]["format"]["type"] == "json_schema"
+assert request["store"] is False
+instructions = request["instructions"]
+source = ("history" if "Prioritize patterns" in instructions else
+          "interests" if "Prioritize the stated" in instructions else "discovery")
+events = Path(os.environ["MOCK_EVENTS"])
+counter = events / (source + ".count")
+attempt = int(counter.read_text()) + 1 if counter.exists() else 1
+counter.write_text(str(attempt))
+(events / (source + ".pid")).write_text(str(os.getpid()))
+(events / (source + ".started")).write_text(str(time.monotonic()))
+(events / (source + ".context")).write_text(request["input"])
+if os.environ.get("MOCK_BARRIER") == "1":
+    deadline = time.monotonic() + 4
+    while len(list(events.glob("*.started"))) < 3:
+        if time.monotonic() > deadline:
+            sys.exit(7)
+        time.sleep(0.02)
+if mode == "long":
+    time.sleep(60)
+if mode == "timeout":
+    sys.exit(28)
+status = "200"
+if mode == "http429_once" and attempt == 1:
+    status = "429"
+elif mode == "http500_always" or (mode == "fail_history" and source == "history"):
+    status = "503"
+elif mode == "http401":
+    status = "401"
+
+def candidate(title):
+    return {"title": title, "author": "Example Author", "genre": "Technology",
+            "reason": "A useful perspective from " + source + "."}
+
+books = [candidate("Common Ground")] + [candidate(source + " book " + str(i)) for i in range(1, 5)]
+if source == "history":
+    books = [{"title": "  DUNE  ", "author": " frank herbert ", "genre": "Science Fiction",
+              "reason": "This should be excluded when already owned."}] + books[:4]
+if mode == "empty":
+    books = []
+content = [{"type": "output_text", "text": json.dumps({"recommendations": books})}]
+if mode == "refusal":
+    content = [{"type": "refusal", "refusal": "Fixture refusal"}]
+response = {"status": "incomplete" if mode == "incomplete" else "completed",
+            "output": [{"type": "message", "content": content}]}
+output.write_text("not json" if mode == "bad_json" else json.dumps(response))
+(events / (source + ".ended")).write_text(str(time.monotonic()))
+sys.stdout.write(status)

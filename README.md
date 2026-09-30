@@ -1,429 +1,102 @@
-# Problem Set #2: Build Your Personal Book Manager
+# Tech & Sci-Fi Book Manager
 
-## Goal
+A small Bash reading desk for programming, AI, science fiction, and discoveries beyond them. Built for PS2 from [onexi/ps02](https://github.com/onexi/ps02).
 
-Build a small, personal command-line application for managing books.
+## Run
 
-The system should help you:
+On macOS, install the dependencies:
 
-- keep track of books you own, want to read, are reading, or have finished
-- search and browse your library
-- enrich books with useful metadata
-- generate personalized recommendations
-- run several recommendation strategies in parallel
-- combine and refine results through pipes
-- show progress while work is happening
-- provide a rich terminal interface using Gum
-
-The purpose of this problem set is not to build a large application. The purpose is to build a **small system whose architecture you understand end to end**.
-
-You may use Codex. However, you should be able to open any file in your project and explain what it does, what goes into it, what comes out of it, and how it connects to the rest of the application.
-
----
-
-## Architectural Principle
-
-Your application should be built from **small, understandable Bash programs**.
-
-The architecture is:
-
-```text
-UI → Workflows → Book / Recommendation Components → Data Layer → Storage
+```bash
+brew install gum jq python
+git clone https://github.com/Wuhubing/ps02.git
+cd ps02
+./book-manager/app.sh
 ```
 
-The application should not place everything in one Bash file.
+Bash 3.2 or newer, curl, jq, Python 3, and [Gum](https://github.com/charmbracelet/gum) are required. On Linux, install the same commands using your package manager and Gum's installation instructions. Python is used only inside the database component for reliable CSV parsing; the application and its workflows are Bash programs.
 
-Instead, each architectural responsibility should live in a separate file. The filesystem itself should make the architecture visible.
+Choose **Browse Library**, **Add Book**, **Search Library**, **Update Status / Rating**, or **Get Recommendations**. Arrow keys and Enter select an option; Esc cancels a prompt, and Ctrl+C exits. The shipped library is empty. Add books before requesting history-based recommendations, or start with the built-in technology and science-fiction preferences.
 
----
+The entry point also works from another directory:
 
-## Required Project Structure
+```bash
+/absolute/path/to/ps02/book-manager/app.sh
+```
+
+## AI configuration
+
+Put your OpenAI API key on a single line in `book-manager/token.txt`, or set `OPENAI_API_KEY` in your shell. The environment variable takes precedence. `token.txt` and `.env` files are ignored by Git; the application does not automatically source `.env` files. Do not include your key in recordings.
+
+Optional settings:
+
+```bash
+export OPENAI_MODEL=gpt-4o-mini
+export OPENAI_KEY_FILE=/absolute/path/to/a/private-key-file
+```
+
+The default model is `gpt-4o-mini`. Each recommendation run sends three requests to the [OpenAI Responses API](https://developers.openai.com/api/docs/guides/structured-outputs), with the library and interests as context. This requires API access and may incur API charges. Responses use a strict JSON schema. Missing credentials affect only recommendations; local library operations still work.
+
+Book metadata comes from the [Open Library Search API](https://openlibrary.org/dev/docs/api/search). Pick one of up to five matches, review the fields, and save. If the lookup fails or finds nothing, the same form lets you enter everything manually. Recommended books go through this review before saving too. Model suggestions are not independently verified bibliographic records.
+
+## Architecture
+
+The application follows **UI → Workflows → Book / Recommendation Components → Data Layer → Storage**. UI scripts own Gum prompts and presentation. Workflows coordinate small programs, book components fetch metadata or search, and independent recommendation programs apply different prompts. Only the data component reads or writes the CSV, using Python's standard library inside its Bash entry point. Components exchange JSON Lines on stdout; diagnostics and progress use stderr, so pipes carry only data. The entry point stays small, and the shared API adapter keeps HTTP handling out of the recommendation strategies.
 
 ```text
 book-manager/
-│
 ├── app.sh
-│
 ├── ui/
 │   ├── main_menu.sh
 │   ├── library_screen.sh
 │   └── recommendations_screen.sh
-│
 ├── workflows/
 │   ├── manage_library.sh
 │   └── get_recommendations.sh
-│
 ├── books/
 │   ├── fetch_book_metadata.sh
 │   └── search_books.sh
-│
 ├── recommendations/
 │   ├── recommend_from_history.sh
 │   ├── recommend_from_interests.sh
 │   ├── recommend_for_discovery.sh
 │   └── refine_recommendations.sh
-│
-└── data/
-    ├── book_database.sh
-    └── books.csv
+├── data/
+│   ├── book_database.sh
+│   └── books.csv
+└── lib/
+    ├── common.sh
+    └── openai_request.sh
 ```
 
-You may add files if you have a clear reason, but do not remove or collapse the required architectural layers.
+For a complete recommendation trace: the UI collects interests, the workflow obtains one library snapshot through the data layer, and three programs start concurrently with `&`. Their PIDs are captured with `$!`; each program's state is shown as `running`, `done`, or `failed`, and `wait` collects its result. Successful outputs are concatenated and piped into refinement, which removes existing titles and duplicates and picks at most six books in source rotation. The UI shows the shortlist and can send a chosen book through the normal add workflow.
 
----
-
-## What Each File Must Do
-
-### `app.sh`
-
-The entry point for the application.
-
-Responsibilities:
-
-- start the application
-- call the main UI
-- connect the top-level pieces together
-- remain small
-
-`app.sh` should not contain database logic, recommendation logic, or large UI sections.
-
----
-
-## UI Layer
-
-### `ui/main_menu.sh`
-
-The application's main menu.
-
-Use **Gum** to let the user choose actions such as:
-
-- Browse Library
-- Add Book
-- Search Library
-- Get Recommendations
-- Quit
-
-This file should focus on interaction, not application logic.
-
-### `ui/library_screen.sh`
-
-Displays library-related information.
-
-Possible responsibilities:
-
-- show saved books
-- show reading status
-- display search results
-- present book details
-
-### `ui/recommendations_screen.sh`
-
-Displays recommendation-related information.
-
-Possible responsibilities:
-
-- show progress while recommendation agents are running
-- show the final shortlist
-- let the user select or save a recommended book
-
----
-
-## Workflow Layer
-
-### `workflows/manage_library.sh`
-
-Coordinates library operations.
-
-Examples:
-
-```text
-User Input → Metadata → Database
-```
-
-or
-
-```text
-Search Request → Search Component → Results → UI
-```
-
-This file should coordinate components rather than perform every task itself.
-
-### `workflows/get_recommendations.sh`
-
-Coordinates the recommendation workflow.
-
-This is where you should demonstrate **parallelization, synchronization, pipes, and streaming**.
-
-At minimum:
-
-1. Start the three recommendation programs in parallel.
-2. Show that work is happening while they run.
-3. Wait for them to finish.
-4. Combine their outputs.
-5. Pipe the combined recommendations into `refine_recommendations.sh`.
-6. Send the final result to the UI.
-
-Conceptually:
-
-```text
-                    ┌→ History Agent ────┐
-Library + Interests ├→ Interest Agent ───┼→ Combine → Refine → Display
-                    └→ Discovery Agent ──┘
-```
-
----
-
-## Book Components
-
-### `books/fetch_book_metadata.sh`
-
-Takes basic book information and enriches it.
-
-Possible input:
-
-```text
-Dune | Frank Herbert
-```
-
-Possible output:
-
-```text
-Dune | Frank Herbert | Science Fiction | 1965
-```
-
-Keep the interface simple and predictable.
-
-You may use Codex as part of this step.
-
-### `books/search_books.sh`
-
-Searches the user's library.
-
-It should receive a search term and return matching books.
-
-Examples:
-
-```bash
-./books/search_books.sh "history"
-```
-
-or through a pipe:
-
-```bash
-echo "history" | ./books/search_books.sh
-```
-
----
-
-## Recommendation Components
-
-These three programs should represent **different ways of thinking about a recommendation**.
-
-They should be independent so they can run in parallel.
-
-### `recommendations/recommend_from_history.sh`
-
-Recommend books based on what the user has already read, rated, or saved.
-
-### `recommendations/recommend_from_interests.sh`
-
-Recommend books based on the user's stated interests, topics, fields, hobbies, or goals.
-
-### `recommendations/recommend_for_discovery.sh`
-
-Recommend something intentionally outside the user's normal patterns.
-
-The purpose is exploration rather than similarity.
-
-### `recommendations/refine_recommendations.sh`
-
-Receives recommendation candidates through `stdin`.
-
-Its job is to:
-
-- remove obvious duplicates
-- remove books already in the library
-- reduce the candidate list
-- polish or rank the final shortlist
-
-It should produce a clean final result on `stdout`.
-
-This makes it usable in a pipeline:
-
-```bash
-cat recommendations.txt | ./recommendations/refine_recommendations.sh
-```
-
----
-
-## Data Layer
-
-### `data/book_database.sh`
-
-This is the **only application component that should directly read from or write to `books.csv`**.
-
-Other files should ask the data layer to perform operations such as:
-
-- add a book
-- list books
-- search books
-- update status
-- update rating
-- check whether a book already exists
-
-This creates an abstraction boundary between your application and its storage.
-
-The rest of the application should not care whether the data is stored in CSV, SQLite, or something else.
-
-### `data/books.csv`
-
-The persistent storage for your library.
-
-Keep the structure simple. For example:
-
-```text
-title,author,genre,status,rating,link
-```
-
-You may extend the schema if your application needs additional fields.
-
----
-
-## Required Technical Concepts
-
-Your application must demonstrate all of the following:
-
-### Bash Programs
-
-The application must be composed primarily of small Bash programs.
-
-### Pipes
-
-At least one meaningful workflow must pass output from one program directly into another using `|`.
-
-Example pattern:
-
-```text
-Generate → Filter → Refine
-```
-
-### Parallelization
-
-The three recommendation programs must run concurrently using Bash background processes.
-
-You should use the concepts introduced in class:
-
-```bash
-&
-$!
-wait
-```
-
-### Streaming / Progress
-
-The user should be able to tell that work is happening while longer-running tasks execute.
-
-Keep this simple. A changing status line, elapsed timer, or messages such as `running` / `done` are sufficient.
-
-### Gum
-
-Use Gum to create a richer command-line experience.
-
-At minimum, use it for the main menu and user selection.
-
-### Codex
-
-You may use Codex inside your application and while developing it.
-
-However, keep the code small and understandable.
-
-A good test is:
-
-> Can you explain every file in your project without asking Codex what it does?
-
----
+See [the file-by-file guide and command interfaces](docs/ARCHITECTURE.md) for inputs, outputs, and responsibilities.
 
 ## Personalization
 
-Your Book Manager should reflect **you**.
+This reading desk connects practical technical learning with imaginative reading. The initial interests are programming, AI, and science fiction, and they can be edited before every recommendation run. The history strategy looks at finished books, ratings, and saved titles; the interests strategy focuses on the current learning goals; the discovery strategy deliberately reaches into history, humanities, natural science, and literature. Source labels and short explanations make each suggestion understandable, while round-robin refinement gives unfamiliar topics space beside familiar ones.
 
-The architecture is prescribed. The experience is not.
+## Test
 
-You decide:
-
-- what metadata matters to you
-- what counts as a useful recommendation
-- what your recommendation agents optimize for
-- how you organize your library
-- what your interface looks like
-- what additional feature would make the system genuinely useful to you
-
-Your system should reveal something about your interests, preferences, or way of thinking.
-
----
-
-## Keep It Small
-
-Do not optimize for the largest application.
-
-Optimize for:
-
-```text
-Small files
-Clear responsibilities
-Simple interfaces
-Visible data flow
-Understandable architecture
+```bash
+python3 -m unittest discover -s tests -v
+find book-manager -name '*.sh' -exec bash -n {} \;
 ```
 
-If one Bash file becomes difficult to understand, ask whether it is doing more than one job.
+The automated suite uses an isolated database and local curl/Gum doubles. It never uses your real API key or the network. It checks persistence, quoted CSV values and Unicode, duplicate handling, state updates, metadata fallback, actual concurrent starts, shared context, shortlist diversity, missing keys, HTTP errors, retry limits, invalid responses, UI cancellation, and process cleanup.
 
----
+For a separate real API check, run **Get Recommendations** in the application after configuring your key. Automated fixtures and real checks are reported separately in [VALIDATION.md](docs/VALIDATION.md).
 
-## Deliverables
+## Narrated demo — recording still required
 
-Submit your work through **GitHub**.
+The required narrated video has **not yet been recorded**. Use the [2–3 minute demo script](docs/DEMO.md) to record adding a book, searching/updating it, and generating/saving a recommendation. Then add the video to the repository or replace this paragraph with a clearly visible, accessible video link before submitting.
 
-1. Create a repository in **your own GitHub account**. You may choose the repository name.
-2. Push your complete `book-manager/` project to the repository.
-3. Include a short `README.md` containing:
-   - how to run the application
-   - one paragraph describing your architecture
-   - one paragraph explaining what you personalized
-4. Include a **short narrated demo video** in the repository, or provide a clearly visible link to it from the `README.md`. The video should:
-   - show the application running in the terminal
-   - make the interface clearly visible
-   - demonstrate **two or three operations**
-   - include your narration explaining what you are doing and what the application is doing
-   - be short: the goal is simply to let someone open your project and quickly understand what you built
-5. Be prepared to explain any file in your project and trace one complete workflow from user input to output.
+The final submission is this repository's URL in the class sheet's **Assignment No 2** column. The original assignment is preserved in [ASSIGNMENT.md](docs/ASSIGNMENT.md).
 
-### How to Submit
+## Storage and limits
 
-Enter the URL of your GitHub repository in the class sign-up sheet under the column **`Assignment No 2`**:
+Books persist in the six-column CSV supplied by the assignment. The database validates status and rating, handles CSV escaping, and replaces files atomically. A title and author pair identifies a book after trimming surrounding whitespace and folding ASCII capitals. Different editions, alternate titles, or differently spelled author names can still appear separately. The app assumes one interactive instance writes the library at a time.
 
-https://docs.google.com/spreadsheets/d/1ZewIG5udWWpk3Kdrab5yDbsWDV4gnH3liKobIAp7HG4/edit?usp=sharing
+API requests time out after 45 seconds; HTTP 429 and 5xx are retried once. Partial recommendation failures preserve successful results and identify failed strategies. Fully failed runs return to the menu. Ctrl+C terminates active recommendation HTTP processes and removes temporary files. The application does not implement model token streaming: the assignment's progress requirement is fulfilled by live task status updates.
 
-Your GitHub repository URL is your homework submission.
-
----
-
-## What Success Looks Like
-
-A successful submission does not need to be large or sophisticated.
-
-It should feel like **one coherent application assembled from small components**.
-
-When someone opens your project directory, they should be able to understand the architecture before reading much of the code.
-
-When someone runs it, they should see a personal book-management application that demonstrates the core ideas from class:
-
-```text
-Input → Workflow → Decision → Intelligence → Output
-```
-
-combined with:
-
-```text
-Small Programs + Pipes + Parallelization + Streaming + Composition
-```
+Starter code is used under the included [MIT license](LICENSE).
