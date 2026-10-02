@@ -41,6 +41,6 @@ Updated October 2, 2026: the narration is now the student's own English voice re
 
 English captions are visible in the video and supplied separately as `docs/demo.srt`. The video uses H.264 at 1920×1080 with AAC audio, runs approximately 2 minutes 9 seconds, and is about 3 MB. Representative frames were visually reviewed for readable UI and subtitles; the audio stream was checked for audible level and clipping. The captured terminal output was checked to ensure it contains no API credential.
 
-## Remaining assignment deliverable
+## Submission status
 
-The repository URL still needs to be entered in the class sign-up sheet. The video deliverable is now included.
+The repository URL has been entered in the class sign-up sheet's **PS2 Site URL** column (verified October 2, 2026). The narrated video is included in the repository and linked from the README. The student should still be prepared to explain each file and trace a complete workflow.

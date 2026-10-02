@@ -97,7 +97,7 @@ The [demo video](docs/demo.mp4) shows three actual terminal operations: adding D
 
 See the [narration transcript and recording notes](docs/DEMO.md), or download the [subtitle file](docs/demo.srt).
 
-The final submission is this repository's URL in the class sheet's **Assignment No 2** column. The original assignment is preserved in [ASSIGNMENT.md](docs/ASSIGNMENT.md).
+The repository URL has been entered in the class sheet's **PS2 Site URL** column (verified October 2, 2026). The original assignment is preserved in [ASSIGNMENT.md](docs/ASSIGNMENT.md).
 
 ## Storage and limits
 

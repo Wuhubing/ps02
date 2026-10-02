@@ -54,4 +54,4 @@ The project is organized into small Bash files, with separate layers for the int
 
 ## Submission
 
-The narrated video is included in the repository and linked near the top of the README. The repository URL still needs to be entered in the class sheet's **Assignment No 2** column.
+The narrated video is included in the repository and linked near the top of the README. The repository URL has been entered in the class sheet's **PS2 Site URL** column (verified October 2, 2026).
