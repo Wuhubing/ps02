@@ -2,7 +2,7 @@
 
 A small Bash reading desk for programming, AI, science fiction, and discoveries beyond them. Built for PS2 from [onexi/ps02](https://github.com/onexi/ps02).
 
-**[Watch the narrated demo — 1:59, MP4, about 3 MB](docs/demo.mp4)** · [Download video](https://raw.githubusercontent.com/Wuhubing/ps02/main/docs/demo.mp4)
+**[Watch the narrated demo — 2:09, MP4, about 3 MB](docs/demo.mp4)** · [Download video](https://raw.githubusercontent.com/Wuhubing/ps02/main/docs/demo.mp4)
 
 [![Watch the narrated terminal demo](docs/demo-poster.jpg)](docs/demo.mp4)
 
@@ -93,7 +93,7 @@ For a separate real API check, run **Get Recommendations** in the application af
 
 ## Narrated demo
 
-The [demo video](docs/demo.mp4) shows three actual terminal operations: adding Dune through Open Library, searching by author, and generating a shortlist with three concurrent OpenAI strategies. It includes English synthetic narration (macOS Samantha), visible task progress, and English captions. The compressed 1080p MP4 is about 3 MB. The demo uses an isolated library, so the shipped library remains empty.
+The [demo video](docs/demo.mp4) shows three actual terminal operations: adding Dune through Open Library, searching by author, and generating a shortlist with three concurrent OpenAI strategies. It includes my own recorded English narration, visible task progress, and English captions. Long pauses were shortened, and the footage was retimed to follow my explanation. The compressed 1080p MP4 is about 3 MB. The demo uses an isolated library, so the shipped library remains empty.
 
 See the [narration transcript and recording notes](docs/DEMO.md), or download the [subtitle file](docs/demo.srt).
 

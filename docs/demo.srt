@@ -1,103 +1,115 @@
 1
-00:00:02,737 --> 00:00:08,440
-This is Tech and Sci-Fi Books, a personal book manager built from small Bash programs.
+00:00:01,700 --> 00:00:06,000
+Hi, this is my personal book manager for technology and science fiction.
 
 2
-00:00:08,440 --> 00:00:12,242
-The Gum interface makes it easy to organize a reading
+00:00:06,532 --> 00:00:09,892
+It runs in the terminal and uses Gum for menus.
 
 3
-00:00:12,242 --> 00:00:16,424
-list and explore recommendations for programming, artificial intelligence, and science fiction.
+00:00:09,992 --> 00:00:12,732
+And I will demonstrate three operations:
 
 4
-00:00:17,127 --> 00:00:19,893
-First, I will add Dune by Frank Herbert.
+00:00:13,032 --> 00:00:16,612
+adding a book, searching my library, and getting recommendations.
 
 5
-00:00:19,893 --> 00:00:23,005
-The app searches Open Library and returns matching books.
+00:00:17,052 --> 00:00:21,412
+First, I'll add Dune by Frank Herbert.
 
 6
-00:00:23,005 --> 00:00:28,193
-Instead of typing every detail, I can choose the correct result and review its metadata.
+00:00:21,832 --> 00:00:25,692
+The app searches Open Library and shows matching results.
 
 7
-00:00:28,898 --> 00:00:34,567
-I confirm the title, author, genre, and link, then keep the status as want to read.
+00:00:26,512 --> 00:00:30,892
+I select the correct book and review the title, author, genre, and link.
 
 8
-00:00:34,567 --> 00:00:39,527
-After I approve the entry, the database component saves it to a CSV file.
+00:00:31,332 --> 00:00:35,312
+I'll mark it as want to read and leave the rating empty.
 
 9
-00:00:39,527 --> 00:00:41,653
-Each layer has a separate responsibility.
+00:00:35,892 --> 00:00:39,132
+After I confirm, the app saves the book.
 
 10
-00:00:42,356 --> 00:00:44,772
-Next, I search for Frank Herbert.
+00:00:39,172 --> 00:00:43,872
+Only the database component reads and writes the CSV file.
 
 11
-00:00:44,772 --> 00:00:48,798
-The saved book appears immediately, along with its reading status.
+00:00:44,312 --> 00:00:47,412
+Next, I'll search for Frank Herbert.
 
 12
-00:00:48,798 --> 00:00:55,239
-Search works across titles, authors, and genres, and the library stays available after the app closes.
+00:00:48,112 --> 00:00:52,472
+The book I just added appears with its reading status.
 
 13
-00:00:55,943 --> 00:00:57,577
-Finally, I request recommendations.
+00:00:52,812 --> 00:00:55,212
+I can also search by title and genre.
 
 14
-00:00:57,577 --> 00:01:04,520
-The starting interests are programming, AI, and science fiction, and I can change them for this run.
+00:00:55,746 --> 00:01:00,626
+The data is saved locally, so my library stays available after I close the app.
 
 15
-00:01:04,520 --> 00:01:09,830
-The app will send the same library snapshot to three independent recommendation strategies.
+00:01:01,066 --> 00:01:03,306
+Finally, I'll get recommendations.
 
 16
-00:01:10,534 --> 00:01:14,174
-All three strategies are now running at the same time.
+00:01:04,269 --> 00:01:09,689
+I'll keep the default interests: programming, AI, and science fiction.
 
 17
-00:01:14,174 --> 00:01:16,358
-History uses saved books and ratings.
+00:01:10,209 --> 00:01:14,089
+Three recommendation scripts now run in parallel.
 
 18
-00:01:16,358 --> 00:01:18,543
-Interests follows the topics I entered.
+00:01:14,903 --> 00:01:17,883
+History uses my saved books and ratings.
 
 19
-00:01:18,543 --> 00:01:20,727
-Discovery explores outside the usual pattern.
+00:01:18,509 --> 00:01:20,749
+Interests focuses on the topics I entered.
 
 20
-00:01:20,727 --> 00:01:26,187
-The status messages show each task finishing, while the Bash workflow waits for every process.
+00:01:21,289 --> 00:01:24,229
+Discovery suggests books outside my usual interests.
 
 21
-00:01:26,888 --> 00:01:30,127
-The workflow combines the results and pipes them into refinement.
+00:01:25,069 --> 00:01:30,779
+The progress messages show when each script is running and when it's finished.
 
 22
-00:01:30,127 --> 00:01:36,607
-That step removes duplicates and books already in the library, then rotates among the strategies to produce a short list.
+00:01:31,219 --> 00:01:36,339
+The workflow waits for all scripts, combines their results,
 
 23
-00:01:36,607 --> 00:01:40,170
-Each suggestion shows its source and a reason for reading it.
+00:01:36,639 --> 00:01:41,239
+and sends them through a pipe to the refinement script.
 
 24
-00:01:40,873 --> 00:01:46,655
-That is the complete demo: adding a book, searching the library, and generating recommendations.
+00:01:41,859 --> 00:01:48,319
+The script removes duplicates and books already in my library, then produces a shortlist.
 
 25
-00:01:46,655 --> 00:01:50,784
-Small Bash files handle the layers, Gum handles interaction, and
+00:01:48,759 --> 00:01:52,499
+Each recommendation includes a source and a short explanation.
 
 26
-00:01:50,784 --> 00:01:54,501
-parallel processes and a pipe connect the recommendation workflow.
+00:01:52,939 --> 00:01:59,319
+The project is organized into small Bash files, with separate layers for the interface,
+
+27
+00:02:00,679 --> 00:02:03,879
+workflows, book components, and data storage.
+
+28
+00:02:04,590 --> 00:02:06,090
+That's my book manager.
+
+29
+00:02:06,110 --> 00:02:07,190
+Thanks so much for watching.

@@ -37,7 +37,9 @@ The shipped library remains empty. These checks establish that the integration w
 
 The recorded video is available as `docs/demo.mp4`, with a visible link and thumbnail in the README. It shows adding a book, searching, and generating recommendations during an actual terminal session. Open Library and all three OpenAI strategies completed successfully during recording. The demo uses a separate database, leaving the shipped library empty.
 
-The narration is synthetic English speech (macOS Samantha). English captions are visible in the video and supplied separately as `docs/demo.srt`. The video uses H.264 at 1920×1080 with AAC audio, runs approximately 1 minute 59 seconds, and is about 3 MB. Representative frames were visually reviewed for readable UI and subtitles; the audio stream was checked for audible level and clipping. The captured terminal output was checked to ensure it contains no API credential.
+Updated October 2, 2026: the narration is now the student's own English voice recording. Fourteen long pauses were shortened, removing about 15.6 seconds of internal silence, and the volume was normalized without changing the speaker's pitch or speaking speed. The terminal footage was retimed to follow the recording, and captions were rebuilt from the recorded speech with technical spellings corrected. The original terminal capture remains available separately.
+
+English captions are visible in the video and supplied separately as `docs/demo.srt`. The video uses H.264 at 1920×1080 with AAC audio, runs approximately 2 minutes 9 seconds, and is about 3 MB. Representative frames were visually reviewed for readable UI and subtitles; the audio stream was checked for audible level and clipping. The captured terminal output was checked to ensure it contains no API credential.
 
 ## Remaining assignment deliverable
 

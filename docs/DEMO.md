@@ -1,6 +1,6 @@
 # Narrated terminal demo
 
-**[Watch the video](demo.mp4)** — 1:59, 1920×1080, H.264/AAC MP4, about 3 MB.
+**[Watch the video](demo.mp4)** — 2:09, 1920×1080, H.264/AAC MP4, about 3 MB.
 
 [English subtitles](demo.srt) · [Original terminal capture](demo.cast)
 
@@ -8,49 +8,49 @@
 
 | Time | Operation |
 | --- | --- |
-| 00:17 | Add Dune through Open Library, review metadata, and save as want to read. |
-| 00:42 | Search the saved library by the author Frank Herbert. |
-| 00:55 | Enter interests, run three AI strategies concurrently, and review the refined shortlist. |
+| 00:16 | Add Dune through Open Library, review metadata, and save as want to read. |
+| 00:44 | Search the saved library by the author Frank Herbert. |
+| 01:00 | Enter interests, run three AI strategies concurrently, and review the refined shortlist. |
 
 ## Recording notes
 
-The visuals come from an actual Bash/Gum session captured in a pseudo-terminal. Open Library and OpenAI were called live; the displayed application results are not mock responses. The terminal output was rendered with a readable font, chapter labels, and captions. The source capture is included in asciicast v2 format.
+The visuals come from an actual Bash/Gum session captured in a pseudo-terminal. Open Library and OpenAI were called live; the displayed application results are not mock responses. The terminal output was rendered with a readable font, chapter labels, and captions. The original source capture is included in asciicast v2 format; its timestamps reflect the original run rather than the edited video.
 
-The English narration uses the macOS Samantha text-to-speech voice. It is synthetic narration, not a recording of the student's voice. The script describes the actual actions and the application architecture. A separate demo database was used, so the project's shipped library remains empty. No credential was displayed or included in the capture.
+The English narration is the student's own voice recording. Fourteen long pauses were shortened, and the volume was normalized; the speaker's voice, pitch, and speaking speed were preserved. The existing terminal footage was retimed to follow this narration. Captions and the transcript below use corrected technical spellings and punctuation. A separate demo database was used, so the project's shipped library remains empty. No credential was displayed or included in the capture.
 
 ## Narration transcript
 
-### 00:02 — Meet the reading desk
+### 00:00 — Meet the reading desk
 
-This is Tech and Sci-Fi Books, a personal book manager built from small Bash programs. The Gum interface makes it easy to organize a reading list and explore recommendations for programming, artificial intelligence, and science fiction.
+Hi, this is my personal book manager for technology and science fiction. It runs in the terminal and uses Gum for menus. And I will demonstrate three operations: adding a book, searching my library, and getting recommendations.
 
-### 00:17 — 01  /  Add a book
+### 00:16 — 01  /  Add a book
 
-First, I will add Dune by Frank Herbert. The app searches Open Library and returns matching books. Instead of typing every detail, I can choose the correct result and review its metadata.
+First, I'll add Dune by Frank Herbert. The app searches Open Library and shows matching results.
 
-### 00:28 — 01  /  Review and save
+### 00:26 — 01  /  Review and save
 
-I confirm the title, author, genre, and link, then keep the status as want to read. After I approve the entry, the database component saves it to a CSV file. Each layer has a separate responsibility.
+I select the correct book and review the title, author, genre, and link. I'll mark it as want to read and leave the rating empty. After I confirm, the app saves the book. Only the database component reads and writes the CSV file.
 
-### 00:42 — 02  /  Search the library
+### 00:44 — 02  /  Search the library
 
-Next, I search for Frank Herbert. The saved book appears immediately, along with its reading status. Search works across titles, authors, and genres, and the library stays available after the app closes.
+Next, I'll search for Frank Herbert. The book I just added appears with its reading status. I can also search by title and genre. The data is saved locally, so my library stays available after I close the app.
 
-### 00:55 — 03  /  Request recommendations
+### 01:00 — 03  /  Request recommendations
 
-Finally, I request recommendations. The starting interests are programming, AI, and science fiction, and I can change them for this run. The app will send the same library snapshot to three independent recommendation strategies.
+Finally, I'll get recommendations. I'll keep the default interests: programming, AI, and science fiction.
 
 ### 01:10 — 03  /  Three strategies in parallel
 
-All three strategies are now running at the same time. History uses saved books and ratings. Interests follows the topics I entered. Discovery explores outside the usual pattern. The status messages show each task finishing, while the Bash workflow waits for every process.
+Three recommendation scripts now run in parallel. History uses my saved books and ratings. Interests focuses on the topics I entered. Discovery suggests books outside my usual interests. The progress messages show when each script is running and when it's finished.
 
-### 01:26 — 03  /  Read the shortlist
+### 01:31 — 03  /  Read the shortlist
 
-The workflow combines the results and pipes them into refinement. That step removes duplicates and books already in the library, then rotates among the strategies to produce a short list. Each suggestion shows its source and a reason for reading it.
+The workflow waits for all scripts, combines their results, and sends them through a pipe to the refinement script. The script removes duplicates and books already in my library, then produces a shortlist. Each recommendation includes a source and a short explanation.
 
-### 01:40 — Small scripts. Clear data flow.
+### 01:52 — Small scripts. Clear data flow.
 
-That is the complete demo: adding a book, searching the library, and generating recommendations. Small Bash files handle the layers, Gum handles interaction, and parallel processes and a pipe connect the recommendation workflow.
+The project is organized into small Bash files, with separate layers for the interface, workflows, book components, and data storage. That's my book manager. Thanks so much for watching.
 
 ## Submission
 
